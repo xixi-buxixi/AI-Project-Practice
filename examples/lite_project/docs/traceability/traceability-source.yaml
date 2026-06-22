@@ -1,0 +1,11 @@
+requirements:
+  - id: REQ-FIB-01
+    source: REQUIREMENTS.md#1
+    prd_section: REQUIREMENTS.md#核心需求范围
+    module: lite_project
+    logical_entity: Fibonacci
+    acceptance_criteria:
+      - AC-1
+      - AC-2
+    tests:
+      - python src/main.py --test

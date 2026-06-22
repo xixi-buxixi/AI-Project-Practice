@@ -1,0 +1,24 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*~
+*.bak
+*.tmp
+
+# Project specific Agent files
+/.agent/
+**/quarantine/
+**/state/cycles.json.lock
+
+*.log
+
+# Dependencies
+node_modules/
+venv/
+.venv/

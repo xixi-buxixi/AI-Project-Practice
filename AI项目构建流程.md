@@ -100,12 +100,21 @@ project-root/
 ├── .env.example
 ├── .gitignore
 │
+├── agent_prompts/              # 统一的 Agent 提示词目录
+│   ├── OrchestratorAgent/      # 总 Agent 静态初始化提示词
+│   │   └── init.md
+│   └── templates/              # 子 Agent 提示词动态模板
+│       ├── executor.md
+│       └── reviewer.md
+│
 ├── docs/                     # 静态与冻结文档资产（Standard 级别合并）
 │   ├── requirements/
 │   │   └── overview.md       # 合并 PRD、核心原则、简短术语表与边界限制
 │   ├── architecture.md       # 合并模块划分、逻辑实体模型与事件流
 │   ├── contracts/
-│   │   └── overview.md       # 合并当前项目类型对应的物理接口或交互契约
+│   │   ├── overview.md       # 合并当前项目类型对应的物理接口或交互契约
+│   │   └── modules/
+│   │       └── <module-name>.md # 细分模块物理契约
 │   ├── decisions/
 │   │   └── decisions-and-pending-log.md # 记录架构决策、延期与 Pending 问题
 │   └── reviews/              # 质量审查输出目录
@@ -140,6 +149,13 @@ project-root/
 ├── tasks.md                  
 ├── .env.example
 ├── .gitignore
+│
+├── agent_prompts/            # 统一的 Agent 提示词目录
+│   ├── OrchestratorAgent/    # 总 Agent 静态初始化提示词
+│   │   └── init.md
+│   └── templates/            # 子 Agent 提示词动态模板
+│       ├── executor.md
+│       └── reviewer.md
 │
 ├── docs/                     
 │   ├── requirements/         # 细粒度需求文档，严禁合并
