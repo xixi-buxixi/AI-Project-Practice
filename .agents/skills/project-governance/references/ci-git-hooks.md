@@ -2,6 +2,8 @@
 
 本指南介绍如何将 `hookctl.py` 静态治理工具集成到本地 Git Hooks 以及 CI 流程中，确保代码库的安全与一致性。
 
+`hookctl.py` 默认读取仓库根目录的 `.governance.yaml`。可用 `--config <path>` 指定其他配置文件，并可用 `--level lite|standard|enterprise` 覆盖项目级治理档位；旧参数 `--lite` 仍然兼容，等同于 `--level lite`。
+
 ## 1. 本地 Git Pre-Commit Hook 集成
 
 ### 自动安装 (推荐)
@@ -27,7 +29,7 @@ echo "🔍 Running Git Pre-Commit Governance Hooks..."
 echo "========================================="
 
 # 执行 preflight 校验所有模块
-python hooks/hookctl.py preflight --module all
+python hooks/hookctl.py preflight --module all --level standard
 PREFLIGHT_RET=$?
 if [ $PREFLIGHT_RET -ne 0 ]; then
     echo "❌ pre-commit 校验失败：Preflight 被阻断。"
@@ -35,7 +37,7 @@ if [ $PREFLIGHT_RET -ne 0 ]; then
 fi
 
 # 执行 finalize 校验所有模块
-python hooks/hookctl.py finalize --module all
+python hooks/hookctl.py finalize --module all --level standard
 FINALIZE_RET=$?
 if [ $FINALIZE_RET -ne 0 ]; then
     echo "❌ pre-commit 校验失败：Finalize 被阻断。"
@@ -82,17 +84,17 @@ jobs:
 
     - name: Run Static Security Scan
       run: |
-        python hooks/hookctl.py security
+        python hooks/hookctl.py security --config .governance.yaml
 
     - name: Run Integrity and Traceability Matrix Check
       run: |
-        # 验证 constitution.md 与 MODULE_MAP.md 等文件的哈希链一致性
-        python hooks/hookctl.py preflight --module all
+        # Standard 默认跳过 Enterprise 级治理哈希；高风险项目可改为 --level enterprise
+        python hooks/hookctl.py preflight --module all --level standard
 
     - name: Run Codebase Finalize and Tests
       run: |
         # 自动探测多语言环境，执行代码 linter 校验及默认测试套件
-        python hooks/hookctl.py finalize --module all
+        python hooks/hookctl.py finalize --module all --level standard
 ```
 
 ### 2.2 GitLab CI 集成示例
@@ -110,11 +112,11 @@ governance_check:
     - apt-get update && apt-get install -y git
   script:
     # 1. 运行静态安全扫描，检查硬编码密钥及 unignored 敏感文件
-    - python hooks/hookctl.py security
+    - python hooks/hookctl.py security --config .governance.yaml
     # 2. 运行完整性哈希校验
-    - python hooks/hookctl.py preflight --module all
+    - python hooks/hookctl.py preflight --module all --level standard
     # 3. 运行后置自动化编译/语法校验与单元测试
-    - python hooks/hookctl.py finalize --module all
+    - python hooks/hookctl.py finalize --module all --level standard
   only:
     - merge_requests
     - main
@@ -124,7 +126,7 @@ governance_check:
 
 ## 3. 防篡改哈希链更新流程
 
-如果由于需求变更需要修改 `constitution.md`、`traceability-source.yaml` 或 `MODULE_MAP.md`，直接提交会被 `preflight` 的防篡改哈希链校验阻断。
+Enterprise 级项目如果由于需求变更需要修改 `constitution.md`、`traceability-source.json` / `traceability-source.yaml` 或 `MODULE_MAP.md`，直接提交会被 `preflight --level enterprise` 的防篡改哈希链校验阻断。Standard 级默认跳过该阻断，只保留基础边界、安全和验证。
 
 **更新哈希链的标准流程如下**：
 1. 开发者/Agent 编写或更新需求/契约配置文件。
@@ -132,5 +134,5 @@ governance_check:
    ```bash
    python hooks/hookctl.py trace
    ```
-3. 该命令会重新计算这三个核心文件的联合防篡改哈希，并自动写回 `constitution.md` 中，同时重新输出追踪对照表 `traceability.generated.md`。
+3. 该命令会按 `.governance.yaml` 中的路径重新计算核心文件联合防篡改哈希，并自动写回 `constitution.md` 中，同时重新输出追踪对照表 `traceability.generated.md`。追踪源优先使用 JSON，YAML 作为兼容格式保留。
 4. 将更新后的 `constitution.md` 及其他改动一并执行 `git commit` 提交。

@@ -12,6 +12,10 @@
 *   **后端技术栈**：[例如：Node.js + Express / Go + Gin]
 *   **数据库/存储**：[例如：PostgreSQL / Redis]
 *   **验证工具链**：[例如：pytest / npm test / cargo test]
+*   **运行环境与依赖管理 (Runtime Environment)**:
+    *   环境类型 (Type): Conda / venv / Poetry / NVM / SDKMAN / Global
+    *   名称/版本 (Name/Version): [例如：my_conda_env / Node v18.16.0]
+    *   解释器/执行命令前缀 (Path/Prefix): [例如：`conda run -n my_conda_env` / `nvm use 18 &&`]
 
 ## 3. 模块视图与边界 (Modules & Boundaries)
 *   所有可用模块及物理归属详见 [MODULE_MAP.md](./MODULE_MAP.md)。

@@ -1,0 +1,45 @@
+project_level: standard
+
+paths:
+  constitution: docs/requirements/constitution.md
+  traceability_source: docs/traceability/traceability-source.json
+  traceability_source_yaml: docs/traceability/traceability-source.yaml
+  module_map: MODULE_MAP.md
+
+modules:
+  - name: governance_toolchain
+    paths:
+      - hooks
+      - tests
+      - templates
+      - docs
+      - examples/lite_project
+      - AI_RULES_SUMMARY.md
+      - .agents
+      - .governance.yaml
+    languages:
+      - python
+    agent_contract: AI_RULES_SUMMARY.md
+    commands:
+      test: python -m unittest discover -s tests -p "test_*.py" -v
+
+commands:
+  syntax: {}
+  lint: {}
+  test: python -m unittest discover -s tests -p "test_*.py" -v
+
+cleanup:
+  whitelist:
+    - "*.pyc"
+    - "*.pyo"
+    - "__pycache__"
+    - ".pytest_cache"
+    - "*.log"
+    - ".agent-temp"
+    - "tmp/ai-*"
+    - "*.scratch.*"
+
+security:
+  entropy_threshold: 3.5
+  allow_nosec: true
+  allow_test_fixtures: true
