@@ -10,3 +10,7 @@
 ## 2. 验收用例 (Acceptance Criteria)
 *   **AC-1**：运行 `python src/main.py --n 5` 应在 stdout 输出 `[0, 1, 1, 2, 3]`。
 *   **AC-2**：当参数 N 小于等于 0 时，系统返回错误提示且退出码非零。
+
+## 3. 验证命令 (Verification)
+*   **冻结验证命令**：`python src/main.py --test`
+*   **说明**：内置自测 (`--test`) 已通过断言覆盖 AC-1 与 AC-2，是 `task.md` 与追踪矩阵引用的统一验证入口。`--n 5` 为 AC-1 的人工可观测示例。

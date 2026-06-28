@@ -22,3 +22,8 @@ __pycache__/
 node_modules/
 venv/
 .venv/
+
+# Environment files (never commit real secrets)
+.env
+.env.*
+!.env.example

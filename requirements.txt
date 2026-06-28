@@ -1,0 +1,3 @@
+# Governance toolchain runtime dependencies
+# hookctl.py parses .governance.yaml and YAML traceability sources.
+PyYAML>=6.0
